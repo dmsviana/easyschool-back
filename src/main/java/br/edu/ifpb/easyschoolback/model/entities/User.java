@@ -12,14 +12,12 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 import static jakarta.persistence.GenerationType.IDENTITY;
-import static jakarta.persistence.GenerationType.UUID;
 import static java.lang.Boolean.TRUE;
 
 @Getter

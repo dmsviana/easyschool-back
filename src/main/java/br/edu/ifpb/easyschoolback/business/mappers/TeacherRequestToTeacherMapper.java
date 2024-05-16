@@ -1,10 +1,7 @@
 package br.edu.ifpb.easyschoolback.business.mappers;
 
-import br.edu.ifpb.easyschoolback.model.entities.Student;
 import br.edu.ifpb.easyschoolback.model.entities.Teacher;
-import br.edu.ifpb.easyschoolback.presentation.dtos.student.CreateStudentRequestDto;
 import br.edu.ifpb.easyschoolback.presentation.dtos.teacher.CreateTeacherRequestDto;
-import br.edu.ifpb.easyschoolback.presentation.dtos.teacher.TeacherResponseDto;
 
 import java.util.function.Function;
 

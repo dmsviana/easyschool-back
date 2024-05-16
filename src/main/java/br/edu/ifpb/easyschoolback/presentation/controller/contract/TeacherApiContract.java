@@ -1,7 +1,7 @@
 package br.edu.ifpb.easyschoolback.presentation.controller.contract;
 
-import br.edu.ifpb.easyschoolback.presentation.dtos.teacher.CreateTeacherRequestDto;
 import br.edu.ifpb.easyschoolback.presentation.dtos.error.ErrorResponseDto;
+import br.edu.ifpb.easyschoolback.presentation.dtos.teacher.CreateTeacherRequestDto;
 import br.edu.ifpb.easyschoolback.presentation.dtos.teacher.TeacherResponseDto;
 import br.edu.ifpb.easyschoolback.presentation.dtos.teacher.UpdateTeacherRequestDto;
 import io.swagger.v3.oas.annotations.Operation;

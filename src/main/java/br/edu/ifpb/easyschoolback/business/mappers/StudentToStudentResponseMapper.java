@@ -1,7 +1,8 @@
 package br.edu.ifpb.easyschoolback.business.mappers;
 
-import br.edu.ifpb.easyschoolback.presentation.dtos.student.StudentResponseDto;
 import br.edu.ifpb.easyschoolback.model.entities.Student;
+import br.edu.ifpb.easyschoolback.presentation.dtos.student.StudentResponseDto;
+import org.springframework.stereotype.Component;
 
 import java.util.function.Function;
 
