@@ -12,5 +12,4 @@ public class EasyschoolBackApplication {
         SpringApplication.run(EasyschoolBackApplication.class, args);
     }
 
-
 }
