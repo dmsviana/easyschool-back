@@ -6,6 +6,7 @@ import br.edu.ifpb.easyschoolback.model.entities.Course;
 import br.edu.ifpb.easyschoolback.model.entities.Student;
 import br.edu.ifpb.easyschoolback.model.repository.CourseRepository;
 import br.edu.ifpb.easyschoolback.model.repository.StudentRepository;
+import br.edu.ifpb.easyschoolback.model.repository.exception.EntityAlreadyExistsException;
 import br.edu.ifpb.easyschoolback.model.repository.exception.EntityNotFoundException;
 import br.edu.ifpb.easyschoolback.presentation.dtos.course.CourseResponseDto;
 import br.edu.ifpb.easyschoolback.presentation.dtos.course.CreateCourseRequestDto;
@@ -29,11 +30,10 @@ public class CourseService {
     public CourseResponseDto create(final CreateCourseRequestDto courseRequest) {
         log.info("Creating course: {}", courseRequest);
 
-        Course courseExists = findCourseEntityByName(courseRequest.name());
+        Optional<Course> courseExists = findCourseEntityByName(courseRequest.name());
 
-        if (courseExists != null) {
-            log.info("Course already exists: {}", courseExists);
-            return CourseToCourseResponseMapper.mapper(courseExists);
+        if (courseExists.isPresent()) {
+            throw new EntityAlreadyExistsException();
         }
 
         Course createdCourse = CourseRequestToCourseMapper.mapper(courseRequest);
@@ -123,18 +123,35 @@ public class CourseService {
         log.info("Student {} removed from course {}", studentId, courseId);
     }
 
+    public Integer countTotalCourses() {
+        log.info("Counting total courses");
+
+        Integer totalCourses = courseRepository.countTotalCourses();
+
+        log.info("Total courses: {}", totalCourses);
+        return totalCourses;
+    }
+
+    public Integer countStudentsByCourseId(final Long courseId) {
+        log.info("Counting students by course id: {}", courseId);
+
+        Integer totalStudents = courseRepository.countStudentsByCourseId(courseId);
+
+        log.info("Total students by course id: {}", totalStudents);
+        return totalStudents;
+    }
+
     private Course findCourseEntityById(final Long id) {
         return courseRepository.findById(id)
                 .orElseThrow(() -> {
                     log.info("Course not found by id: {}", id);
-                    return new EntityNotFoundException("Course not found");
+                    return new EntityNotFoundException();
                 });
     }
 
-    private Course findCourseEntityByName(final String name) {
+    private Optional<Course> findCourseEntityByName(final String name) {
         log.info("Finding course by name: {}", name);
-        Optional<Course> courseOptional = courseRepository.findByName(name);
-        return courseOptional.orElse(null);
+        return courseRepository.findByName(name);
     }
 
 
@@ -142,7 +159,7 @@ public class CourseService {
         return studentRepository.findById(id)
                 .orElseThrow(() -> {
                     log.info("Student not found by id: {}", id);
-                    return new EntityNotFoundException("Student not found");
+                    return new EntityNotFoundException();
                 });
     }
 }

@@ -1,8 +1,8 @@
 package br.edu.ifpb.easyschoolback.presentation.controller.contract;
 
 
-import br.edu.ifpb.easyschoolback.presentation.dtos.student.CreateStudentRequestDto;
 import br.edu.ifpb.easyschoolback.presentation.dtos.error.ErrorResponseDto;
+import br.edu.ifpb.easyschoolback.presentation.dtos.student.CreateStudentRequestDto;
 import br.edu.ifpb.easyschoolback.presentation.dtos.student.StudentResponseDto;
 import br.edu.ifpb.easyschoolback.presentation.dtos.student.UpdateStudentRequestDto;
 import io.swagger.v3.oas.annotations.Operation;

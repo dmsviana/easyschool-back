@@ -18,9 +18,9 @@ public class CourseToCourseResponseMapper implements Function<Course, CourseResp
 
         StudentToStudentResponseMapper studentToStudentResponseMapper = new StudentToStudentResponseMapper();
         ListStudentsResponseDto students = new ListStudentsResponseDto(course.getStudents()
-                                            .stream()
-                                            .map(studentToStudentResponseMapper)
-                                            .toList());
+                .stream()
+                .map(studentToStudentResponseMapper)
+                .toList());
 
 
         return new CourseResponseDto(

@@ -15,7 +15,7 @@ import java.util.List;
 @RequestScope
 @RestController
 @RequiredArgsConstructor
-public class CourseController implements CourseApiContract  {
+public class CourseController implements CourseApiContract {
 
     private final CourseService courseService;
 

@@ -6,6 +6,7 @@ import br.edu.ifpb.easyschoolback.model.entities.Course;
 import br.edu.ifpb.easyschoolback.model.entities.Teacher;
 import br.edu.ifpb.easyschoolback.model.repository.CourseRepository;
 import br.edu.ifpb.easyschoolback.model.repository.TeacherRepository;
+import br.edu.ifpb.easyschoolback.model.repository.exception.EntityAlreadyExistsException;
 import br.edu.ifpb.easyschoolback.model.repository.exception.EntityNotFoundException;
 import br.edu.ifpb.easyschoolback.presentation.dtos.teacher.CreateTeacherRequestDto;
 import br.edu.ifpb.easyschoolback.presentation.dtos.teacher.TeacherResponseDto;
@@ -32,8 +33,7 @@ public class TeacherService {
         Optional<Teacher> teacherExists = findTeacherByCpf(teacherRequest.cpf());
 
         if (teacherExists.isPresent()) {
-            log.info("Teacher already exists: {}", teacherExists.get());
-            return TeacherToTeacherResponseMapper.mapper(teacherExists.get());
+            throw new EntityAlreadyExistsException();
         }
 
         Teacher createdTeacher = TeacherRequestToTeacherMapper.mapper(teacherRequest);
@@ -93,7 +93,7 @@ public class TeacherService {
         Teacher teacher = findTeacherByCpf(cpf)
                 .orElseThrow(() -> {
                     log.info("Teacher not found by cpf: {}", cpf);
-                    return new EntityNotFoundException("Teacher not found");
+                    return new EntityNotFoundException();
                 });
 
         log.info("Teacher found: {}", teacher);
@@ -106,17 +106,26 @@ public class TeacherService {
         Teacher teacher = teacherRepository.findByRegistration(registration)
                 .orElseThrow(() -> {
                     log.info("Teacher not found by registration: {}", registration);
-                    return new EntityNotFoundException("Teacher not found");
+                    return new EntityNotFoundException();
                 });
 
         log.info("Teacher found: {}", teacher);
         return TeacherToTeacherResponseMapper.mapper(teacher);
     }
 
-    public Integer countTeachersOnCurrentMonth(){
+    public Integer countTeachersOnCurrentMonth() {
         log.info("Counting teachers on current month");
 
         Integer count = teacherRepository.countTeachersOnCurrentMonth();
+
+        log.info("Teachers counted: {}", count);
+        return count;
+    }
+
+    public Integer countTotalTeachers() {
+        log.info("Counting total teachers");
+
+        Integer count = teacherRepository.countTotalTeachers();
 
         log.info("Teachers counted: {}", count);
         return count;
@@ -164,7 +173,7 @@ public class TeacherService {
         return teacherRepository.findById(id)
                 .orElseThrow(() -> {
                     log.info("Teacher not found by id: {}", id);
-                    return new EntityNotFoundException("Teacher not found");
+                    return new EntityNotFoundException();
                 });
     }
 
@@ -172,7 +181,7 @@ public class TeacherService {
         return courseRepository.findById(id)
                 .orElseThrow(() -> {
                     log.info("Course not found by id: {}", id);
-                    return new EntityNotFoundException("Course not found");
+                    return new EntityNotFoundException();
                 });
     }
 }

@@ -1,6 +1,5 @@
 package br.edu.ifpb.easyschoolback.model.repository;
 
-import br.edu.ifpb.easyschoolback.model.entities.Student;
 import br.edu.ifpb.easyschoolback.model.entities.Teacher;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,10 +21,11 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
     @Query("SELECT COUNT(s) FROM Teacher s WHERE MONTH(s.createdAt) = MONTH(CURRENT_DATE)")
     Integer countTeachersOnCurrentMonth();
 
+    @Query("SELECT COUNT(s) FROM Teacher s")
+    Integer countTotalTeachers();
+
     @Query("SELECT COUNT(s) FROM Teacher s WHERE s.salary > :salary")
     Integer countTeachersWithSalaryGreaterThan(final BigDecimal salary);
-
-
 
 
 }

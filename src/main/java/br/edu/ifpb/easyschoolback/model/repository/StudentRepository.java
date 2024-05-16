@@ -4,7 +4,6 @@ import br.edu.ifpb.easyschoolback.model.entities.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface StudentRepository extends JpaRepository<Student, Long> {
@@ -20,6 +19,9 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     @Query("SELECT COUNT(s) FROM Student s WHERE MONTH(s.createdAt) = MONTH(CURRENT_DATE)")
     Integer countStudentsOnCurrentMonth();
+
+    @Query("SELECT COUNT(s) FROM Student s")
+    Integer countTotalStudents();
 
 
 }

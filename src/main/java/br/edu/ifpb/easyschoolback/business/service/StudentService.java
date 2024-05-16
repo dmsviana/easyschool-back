@@ -5,6 +5,7 @@ import br.edu.ifpb.easyschoolback.business.mappers.StudentToStudentResponseMappe
 import br.edu.ifpb.easyschoolback.model.entities.Student;
 import br.edu.ifpb.easyschoolback.model.repository.CourseRepository;
 import br.edu.ifpb.easyschoolback.model.repository.StudentRepository;
+import br.edu.ifpb.easyschoolback.model.repository.exception.EntityAlreadyExistsException;
 import br.edu.ifpb.easyschoolback.model.repository.exception.EntityNotFoundException;
 import br.edu.ifpb.easyschoolback.presentation.dtos.student.CreateStudentRequestDto;
 import br.edu.ifpb.easyschoolback.presentation.dtos.student.StudentResponseDto;
@@ -26,14 +27,14 @@ public class StudentService {
     private final StudentRepository studentRepository;
     private final CourseRepository courseRepository;
 
+
     public StudentResponseDto create(final CreateStudentRequestDto studentRequest) {
         log.info("Creating student: {}", studentRequest);
 
         Optional<Student> studentExists = findStudentByCpf(studentRequest.cpf());
 
         if (studentExists.isPresent()) {
-            log.info("Student already exists: {}", studentExists.get());
-            return StudentToStudentResponseMapper.mapper(studentExists.get());
+            throw new EntityAlreadyExistsException();
         }
 
         Student createdStudent = StudentRequestToStudentMapper.mapper(studentRequest);
@@ -43,13 +44,12 @@ public class StudentService {
         return StudentToStudentResponseMapper.mapper(createdStudent);
     }
 
-
     public StudentResponseDto update(final Long id, final UpdateStudentRequestDto updateRequest) {
         log.info("Updating student: {}", updateRequest);
 
         Student updatedStudent = findStudentById(id);
 
-        if(updatedStudent.getAge() < 18) {
+        if (updatedStudent.getAge() < 18) {
             updatedStudent.setParentName(updateRequest.parentName());
             updatedStudent.setParentPhone(updateRequest.parentPhone());
         }
@@ -94,15 +94,14 @@ public class StudentService {
 
     public StudentResponseDto findByCpf(final String cpf) {
         log.info("Finding student by cpf: {}", cpf);
+        Optional<Student> student = findStudentByCpf(cpf);
 
-        Student student = findStudentByCpf(cpf)
-                .orElseThrow(() -> {
-                    log.info("Student not found by cpf: {}", cpf);
-                    return new EntityNotFoundException("Student not found");
-                });
+        if (!student.isPresent()) {
+            throw new EntityNotFoundException();
+        }
 
-        log.info("Student found: {}", student);
-        return StudentToStudentResponseMapper.mapper(student);
+        log.info("Student found: {}", student.get());
+        return StudentToStudentResponseMapper.mapper(student.get());
     }
 
     public StudentResponseDto findByRegistration(final String registration) {
@@ -111,15 +110,23 @@ public class StudentService {
         Student student = studentRepository.findByRegistration(registration)
                 .orElseThrow(() -> {
                     log.info("Student not found by registration: {}", registration);
-                    return new EntityNotFoundException("Student not found");
+                    return new EntityNotFoundException();
                 });
 
         log.info("Student found: {}", student);
         return StudentToStudentResponseMapper.mapper(student);
     }
 
+    public Integer countTotalStudents() {
+        log.info("Counting total students");
 
-    public Integer countStudentsOnCurrentMonth(){
+        Integer count = studentRepository.countTotalStudents();
+
+        log.info("Students counted: {}", count);
+        return count;
+    }
+
+    public Integer countStudentsOnCurrentMonth() {
         log.info("Counting students on current month");
 
         Integer count = studentRepository.countStudentsOnCurrentMonth();
@@ -136,9 +143,7 @@ public class StudentService {
         return studentRepository.findById(id)
                 .orElseThrow(() -> {
                     log.info("Student not found by id: {}", id);
-                    return new EntityNotFoundException("Student not found");
+                    return new EntityNotFoundException();
                 });
     }
-
-
 }

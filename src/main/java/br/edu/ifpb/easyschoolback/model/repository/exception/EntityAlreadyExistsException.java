@@ -13,6 +13,7 @@ public class EntityAlreadyExistsException extends SchoolBusinessException {
                 Map.of()
         );
     }
+
     public EntityAlreadyExistsException(String message) {
         super(
                 message,

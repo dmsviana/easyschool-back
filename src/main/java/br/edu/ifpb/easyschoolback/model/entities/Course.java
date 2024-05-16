@@ -17,7 +17,6 @@ import java.util.List;
 
 import static jakarta.persistence.FetchType.EAGER;
 import static jakarta.persistence.GenerationType.IDENTITY;
-import static jakarta.persistence.GenerationType.UUID;
 
 @Getter
 @Setter

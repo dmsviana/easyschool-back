@@ -1,8 +1,21 @@
 package br.edu.ifpb.easyschoolback.model.repository.exception;
 
-public class EntityNotFoundException extends RuntimeException {
+import br.edu.ifpb.easyschoolback.model.exception.SchoolBusinessException;
 
-    public EntityNotFoundException(final String message) {
-        super(message);
+import java.util.Map;
+
+public class EntityNotFoundException extends SchoolBusinessException {
+    public EntityNotFoundException() {
+        super(
+                "Ops! Não foi encontrado nenhum registro correspondente com essa busca",
+                Map.of()
+        );
+    }
+
+    public EntityNotFoundException(String message) {
+        super(
+                message,
+                Map.of()
+        );
     }
 }
