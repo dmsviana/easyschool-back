@@ -58,6 +58,7 @@ public class TeacherService {
         return TeacherToTeacherResponseMapper.mapper(updatedTeacher);
     }
 
+
     public void delete(final Long id) {
         log.info("Deleting teacher by id: {}", id);
 

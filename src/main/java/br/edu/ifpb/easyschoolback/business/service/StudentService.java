@@ -66,9 +66,11 @@ public class StudentService {
     public void delete(final Long id) {
         log.info("Deleting student by id: {}", id);
 
+        Student student = findStudentById(id);
+
         courseRepository.removeStudentFromAllCourses(id);
 
-        studentRepository.deleteById(id);
+        studentRepository.delete(student);
         log.info("Student with id deleted: {}", id);
     }
 
