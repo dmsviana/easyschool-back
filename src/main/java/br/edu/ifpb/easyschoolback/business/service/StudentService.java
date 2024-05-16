@@ -49,7 +49,7 @@ public class StudentService {
 
         Student updatedStudent = findStudentById(id);
 
-        if(updatedStudent.getAge() < 18) {
+        if (updatedStudent.getAge() < 18) {
             updatedStudent.setParentName(updateRequest.parentName());
             updatedStudent.setParentPhone(updateRequest.parentPhone());
         }
@@ -126,7 +126,7 @@ public class StudentService {
         return count;
     }
 
-    public Integer countStudentsOnCurrentMonth(){
+    public Integer countStudentsOnCurrentMonth() {
         log.info("Counting students on current month");
 
         Integer count = studentRepository.countStudentsOnCurrentMonth();

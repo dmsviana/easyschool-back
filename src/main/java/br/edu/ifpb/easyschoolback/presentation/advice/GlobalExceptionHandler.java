@@ -51,7 +51,7 @@ public class GlobalExceptionHandler {
         Map<String, Object> errors = new HashMap<>();
         e.getBindingResult().getFieldErrors().forEach(fieldErr -> {
             errors.put(
-                    "field["+fieldErr.getField()+"]",
+                    "field[" + fieldErr.getField() + "]",
                     fieldErr.getDefaultMessage()
             );
         });
@@ -95,7 +95,6 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
-
 
 
     private ErrorResponseDto createError(

@@ -28,7 +28,4 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
     Integer countTeachersWithSalaryGreaterThan(final BigDecimal salary);
 
 
-
-
-
 }

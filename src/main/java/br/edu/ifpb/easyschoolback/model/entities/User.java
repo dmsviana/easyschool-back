@@ -70,7 +70,7 @@ public class User {
     @Column(name = "active", nullable = false)
     private Boolean active = TRUE;
 
-    @Column(name  = "created_at", nullable = false)
+    @Column(name = "created_at", nullable = false)
     @CreatedDate
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime createdAt;

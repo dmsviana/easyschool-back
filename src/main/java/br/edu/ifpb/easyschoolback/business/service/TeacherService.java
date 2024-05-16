@@ -113,7 +113,7 @@ public class TeacherService {
         return TeacherToTeacherResponseMapper.mapper(teacher);
     }
 
-    public Integer countTeachersOnCurrentMonth(){
+    public Integer countTeachersOnCurrentMonth() {
         log.info("Counting teachers on current month");
 
         Integer count = teacherRepository.countTeachersOnCurrentMonth();
