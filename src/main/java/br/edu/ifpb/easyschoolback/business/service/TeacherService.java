@@ -6,7 +6,6 @@ import br.edu.ifpb.easyschoolback.model.entities.Course;
 import br.edu.ifpb.easyschoolback.model.entities.Teacher;
 import br.edu.ifpb.easyschoolback.model.repository.CourseRepository;
 import br.edu.ifpb.easyschoolback.model.repository.TeacherRepository;
-import br.edu.ifpb.easyschoolback.model.repository.exception.EntityAlreadyExistsException;
 import br.edu.ifpb.easyschoolback.model.repository.exception.EntityNotFoundException;
 import br.edu.ifpb.easyschoolback.presentation.dtos.teacher.CreateTeacherRequestDto;
 import br.edu.ifpb.easyschoolback.presentation.dtos.teacher.TeacherResponseDto;
