@@ -26,15 +26,13 @@ public class TeacherService {
 
     private final TeacherRepository teacherRepository;
     private final CourseRepository courseRepository;
+    private final CpfValidationService cpfValidationService;
+
 
     public TeacherResponseDto create(final CreateTeacherRequestDto teacherRequest) {
         log.info("Creating teacher: {}", teacherRequest);
 
-        Optional<Teacher> teacherExists = findTeacherByCpf(teacherRequest.cpf());
-
-        if (teacherExists.isPresent()) {
-            throw new EntityAlreadyExistsException();
-        }
+        cpfValidationService.validateCpf(teacherRequest.cpf());
 
         Teacher createdTeacher = TeacherRequestToTeacherMapper.mapper(teacherRequest);
         createdTeacher = this.teacherRepository.save(createdTeacher);

@@ -24,9 +24,9 @@ import static java.lang.Boolean.TRUE;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@MappedSuperclass
+@Inheritance(strategy = InheritanceType.JOINED)
 @EntityListeners(AuditingEntityListener.class)
-public class User {
+public abstract class User {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
