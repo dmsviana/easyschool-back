@@ -5,7 +5,6 @@ import br.edu.ifpb.easyschoolback.business.mappers.StudentToStudentResponseMappe
 import br.edu.ifpb.easyschoolback.model.entities.Student;
 import br.edu.ifpb.easyschoolback.model.repository.CourseRepository;
 import br.edu.ifpb.easyschoolback.model.repository.StudentRepository;
-import br.edu.ifpb.easyschoolback.model.repository.exception.EntityAlreadyExistsException;
 import br.edu.ifpb.easyschoolback.model.repository.exception.EntityNotFoundException;
 import br.edu.ifpb.easyschoolback.presentation.dtos.student.CreateStudentRequestDto;
 import br.edu.ifpb.easyschoolback.presentation.dtos.student.StudentResponseDto;
@@ -26,16 +25,13 @@ public class StudentService {
 
     private final StudentRepository studentRepository;
     private final CourseRepository courseRepository;
+    private final CpfValidationService cpfValidationService;
 
 
     public StudentResponseDto create(final CreateStudentRequestDto studentRequest) {
         log.info("Creating student: {}", studentRequest);
 
-        Optional<Student> studentExists = findStudentByCpf(studentRequest.cpf());
-
-        if (studentExists.isPresent()) {
-            throw new EntityAlreadyExistsException();
-        }
+        cpfValidationService.validateCpf(studentRequest.cpf());
 
         Student createdStudent = StudentRequestToStudentMapper.mapper(studentRequest);
         createdStudent = this.studentRepository.save(createdStudent);

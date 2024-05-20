@@ -6,7 +6,6 @@ import br.edu.ifpb.easyschoolback.model.entities.Course;
 import br.edu.ifpb.easyschoolback.model.entities.Teacher;
 import br.edu.ifpb.easyschoolback.model.repository.CourseRepository;
 import br.edu.ifpb.easyschoolback.model.repository.TeacherRepository;
-import br.edu.ifpb.easyschoolback.model.repository.exception.EntityAlreadyExistsException;
 import br.edu.ifpb.easyschoolback.model.repository.exception.EntityNotFoundException;
 import br.edu.ifpb.easyschoolback.presentation.dtos.teacher.CreateTeacherRequestDto;
 import br.edu.ifpb.easyschoolback.presentation.dtos.teacher.TeacherResponseDto;
@@ -26,15 +25,13 @@ public class TeacherService {
 
     private final TeacherRepository teacherRepository;
     private final CourseRepository courseRepository;
+    private final CpfValidationService cpfValidationService;
+
 
     public TeacherResponseDto create(final CreateTeacherRequestDto teacherRequest) {
         log.info("Creating teacher: {}", teacherRequest);
 
-        Optional<Teacher> teacherExists = findTeacherByCpf(teacherRequest.cpf());
-
-        if (teacherExists.isPresent()) {
-            throw new EntityAlreadyExistsException();
-        }
+        cpfValidationService.validateCpf(teacherRequest.cpf());
 
         Teacher createdTeacher = TeacherRequestToTeacherMapper.mapper(teacherRequest);
         createdTeacher = this.teacherRepository.save(createdTeacher);
