@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import static org.springframework.http.HttpStatus.OK;
 
 @Tag(name = "Dashboard", description = "Operations related to dashboard")
-@RequestMapping("/api/v1/dashboard")
+@RequestMapping("/dashboard")
 public interface DashboardApiContract {
 
     @Operation(

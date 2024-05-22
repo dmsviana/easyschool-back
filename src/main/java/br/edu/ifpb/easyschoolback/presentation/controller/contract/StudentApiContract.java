@@ -19,7 +19,7 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.*;
 
 @Tag(name = "Student", description = "Operations related to students")
-@RequestMapping("/api/v1/students")
+@RequestMapping("/students")
 public interface StudentApiContract {
 
     @Operation(
