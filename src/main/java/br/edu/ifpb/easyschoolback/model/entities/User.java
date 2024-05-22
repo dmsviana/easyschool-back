@@ -24,7 +24,7 @@ import static java.lang.Boolean.TRUE;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Inheritance(strategy = InheritanceType.JOINED)
+@MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class User {
 
