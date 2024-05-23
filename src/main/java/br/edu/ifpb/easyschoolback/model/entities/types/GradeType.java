@@ -1,4 +1,4 @@
-package br.edu.ifpb.easyschoolback.model.entities;
+package br.edu.ifpb.easyschoolback.model.entities.types;
 
 public enum GradeType {
 

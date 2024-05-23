@@ -1,9 +1,13 @@
 package br.edu.ifpb.easyschoolback.model.entities;
 
 
+import br.edu.ifpb.easyschoolback.model.entities.types.GradeType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -33,9 +37,9 @@ public class Grade {
     @Column(name = "weight", nullable = false)
     private Integer weight;
 
-    @Column(name = "value", nullable = false)
+    @Column(name = "grade_value", nullable = false)
     @Positive
-    private Double value;
+    private Double gradeValue;
 
     @Column(name = "type", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -54,7 +58,7 @@ public class Grade {
 
 
     @PreUpdate
-    public void preUpdate(){
+    public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 

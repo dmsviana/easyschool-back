@@ -1,8 +1,16 @@
 package br.edu.ifpb.easyschoolback.presentation.dtos.student;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.List;
 
-public record ListStudentsResponseDto(
-        List<StudentResponseDto> students
-) {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class ListStudentsResponseDto {
+    private List<StudentResponseDto> students;
 }

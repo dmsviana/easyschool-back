@@ -1,7 +1,5 @@
 package br.edu.ifpb.easyschoolback.business.service;
 
-import br.edu.ifpb.easyschoolback.business.mappers.TeacherRequestToTeacherMapper;
-import br.edu.ifpb.easyschoolback.business.mappers.TeacherToTeacherResponseMapper;
 import br.edu.ifpb.easyschoolback.model.entities.Course;
 import br.edu.ifpb.easyschoolback.model.entities.Teacher;
 import br.edu.ifpb.easyschoolback.model.repository.CourseRepository;
@@ -12,6 +10,7 @@ import br.edu.ifpb.easyschoolback.presentation.dtos.teacher.TeacherResponseDto;
 import br.edu.ifpb.easyschoolback.presentation.dtos.teacher.UpdateTeacherRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,18 +25,18 @@ public class TeacherService {
     private final TeacherRepository teacherRepository;
     private final CourseRepository courseRepository;
     private final CpfValidationService cpfValidationService;
-
+    private final ModelMapper mapper;
 
     public TeacherResponseDto create(final CreateTeacherRequestDto teacherRequest) {
         log.info("Creating teacher: {}", teacherRequest);
 
-        cpfValidationService.validateCpf(teacherRequest.cpf());
+        cpfValidationService.validateCpf(teacherRequest.getCpf());
 
-        Teacher createdTeacher = TeacherRequestToTeacherMapper.mapper(teacherRequest);
+        Teacher createdTeacher = mapper.map(teacherRequest, Teacher.class);
         createdTeacher = this.teacherRepository.save(createdTeacher);
 
         log.info("Teacher created: {}", createdTeacher);
-        return TeacherToTeacherResponseMapper.mapper(createdTeacher);
+        return mapper.map(createdTeacher, TeacherResponseDto.class);
     }
 
     public TeacherResponseDto update(final Long id, final UpdateTeacherRequestDto updateRequest) {
@@ -45,14 +44,14 @@ public class TeacherService {
 
         Teacher updatedTeacher = findTeacherEntityById(id);
 
-        updatedTeacher.setPhone(updateRequest.phone());
-        updatedTeacher.setEmail(updateRequest.email());
-        updatedTeacher.setSalary(updateRequest.salary());
+        updatedTeacher.setPhone(updateRequest.getPhone());
+        updatedTeacher.setEmail(updateRequest.getEmail());
+        updatedTeacher.setSalary(updateRequest.getSalary());
 
         teacherRepository.save(updatedTeacher);
         log.info("Teacher updated: {}", updatedTeacher);
 
-        return TeacherToTeacherResponseMapper.mapper(updatedTeacher);
+        return mapper.map(updatedTeacher, TeacherResponseDto.class);
     }
 
 
@@ -72,7 +71,7 @@ public class TeacherService {
 
         log.info("Teachers found: {}", teachers);
         return teachers.stream()
-                .map(TeacherToTeacherResponseMapper::mapper)
+                .map(teacher -> mapper.map(teacher, TeacherResponseDto.class))
                 .collect(Collectors.toList());
     }
 
@@ -82,7 +81,7 @@ public class TeacherService {
         Teacher teacher = findTeacherEntityById(id);
 
         log.info("Teacher found: {}", teacher);
-        return TeacherToTeacherResponseMapper.mapper(teacher);
+        return mapper.map(teacher, TeacherResponseDto.class);
     }
 
     public TeacherResponseDto findByCpf(final String cpf) {
@@ -95,7 +94,7 @@ public class TeacherService {
                 });
 
         log.info("Teacher found: {}", teacher);
-        return TeacherToTeacherResponseMapper.mapper(teacher);
+        return mapper.map(teacher, TeacherResponseDto.class);
     }
 
     public TeacherResponseDto findByRegistration(final String registration) {
@@ -108,7 +107,7 @@ public class TeacherService {
                 });
 
         log.info("Teacher found: {}", teacher);
-        return TeacherToTeacherResponseMapper.mapper(teacher);
+        return mapper.map(teacher, TeacherResponseDto.class);
     }
 
     public Integer countTeachersOnCurrentMonth() {
