@@ -26,7 +26,7 @@ public class CpfValidationService {
         Optional<Student> studentExists = studentRepository.findByCpf(cpf);
         Optional<Teacher> teacherExists = teacherRepository.findByCpf(cpf);
 
-        if(studentExists.isPresent() || teacherExists.isPresent()) {
+        if (studentExists.isPresent() || teacherExists.isPresent()) {
             throw new EntityAlreadyExistsException();
         }
     }

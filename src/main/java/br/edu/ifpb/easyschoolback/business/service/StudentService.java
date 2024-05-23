@@ -1,7 +1,5 @@
 package br.edu.ifpb.easyschoolback.business.service;
 
-import br.edu.ifpb.easyschoolback.business.mappers.StudentRequestToStudentMapper;
-import br.edu.ifpb.easyschoolback.business.mappers.StudentToStudentResponseMapper;
 import br.edu.ifpb.easyschoolback.model.entities.Student;
 import br.edu.ifpb.easyschoolback.model.repository.CourseRepository;
 import br.edu.ifpb.easyschoolback.model.repository.StudentRepository;
@@ -11,6 +9,7 @@ import br.edu.ifpb.easyschoolback.presentation.dtos.student.StudentResponseDto;
 import br.edu.ifpb.easyschoolback.presentation.dtos.student.UpdateStudentRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,18 +25,19 @@ public class StudentService {
     private final StudentRepository studentRepository;
     private final CourseRepository courseRepository;
     private final CpfValidationService cpfValidationService;
+    private final ModelMapper mapper;
 
 
     public StudentResponseDto create(final CreateStudentRequestDto studentRequest) {
         log.info("Creating student: {}", studentRequest);
 
-        cpfValidationService.validateCpf(studentRequest.cpf());
+        cpfValidationService.validateCpf(studentRequest.getCpf());
 
-        Student createdStudent = StudentRequestToStudentMapper.mapper(studentRequest);
+        Student createdStudent = mapper.map(studentRequest, Student.class);
         createdStudent = this.studentRepository.save(createdStudent);
 
         log.info("Student created: {}", createdStudent);
-        return StudentToStudentResponseMapper.mapper(createdStudent);
+        return mapper.map(createdStudent, StudentResponseDto.class);
     }
 
     public StudentResponseDto update(final Long id, final UpdateStudentRequestDto updateRequest) {
@@ -46,16 +46,16 @@ public class StudentService {
         Student updatedStudent = findStudentById(id);
 
         if (updatedStudent.getAge() < 18) {
-            updatedStudent.setParentName(updateRequest.parentName());
-            updatedStudent.setParentPhone(updateRequest.parentPhone());
+            updatedStudent.setParentName(updateRequest.getParentName());
+            updatedStudent.setParentPhone(updateRequest.getParentPhone());
         }
-        updatedStudent.setPhone(updateRequest.phone());
-        updatedStudent.setEmail(updateRequest.email());
+        updatedStudent.setPhone(updateRequest.getPhone());
+        updatedStudent.setEmail(updateRequest.getEmail());
 
         studentRepository.save(updatedStudent);
         log.info("Student updated: {}", updatedStudent);
 
-        return StudentToStudentResponseMapper.mapper(updatedStudent);
+        return mapper.map(updatedStudent, StudentResponseDto.class);
     }
 
     @Transactional
@@ -77,7 +77,7 @@ public class StudentService {
 
         log.info("Students found: {}", students);
         return students.stream()
-                .map(StudentToStudentResponseMapper::mapper)
+                .map(student -> mapper.map(student, StudentResponseDto.class))
                 .collect(Collectors.toList());
     }
 
@@ -87,19 +87,19 @@ public class StudentService {
         Student student = findStudentById(id);
 
         log.info("Student found: {}", student);
-        return StudentToStudentResponseMapper.mapper(student);
+        return mapper.map(student, StudentResponseDto.class);
     }
 
     public StudentResponseDto findByCpf(final String cpf) {
         log.info("Finding student by cpf: {}", cpf);
         Optional<Student> student = findStudentByCpf(cpf);
 
-        if (!student.isPresent()) {
+        if (student.isEmpty()) {
             throw new EntityNotFoundException();
         }
 
         log.info("Student found: {}", student.get());
-        return StudentToStudentResponseMapper.mapper(student.get());
+        return mapper.map(student.get(), StudentResponseDto.class);
     }
 
     public StudentResponseDto findByRegistration(final String registration) {
@@ -112,7 +112,7 @@ public class StudentService {
                 });
 
         log.info("Student found: {}", student);
-        return StudentToStudentResponseMapper.mapper(student);
+        return mapper.map(student, StudentResponseDto.class);
     }
 
     public Integer countTotalStudents() {

@@ -1,18 +1,16 @@
 package br.edu.ifpb.easyschoolback.business.service;
 
-import br.edu.ifpb.easyschoolback.business.mappers.CourseRequestToCourseMapper;
-import br.edu.ifpb.easyschoolback.business.mappers.CourseToCourseResponseMapper;
 import br.edu.ifpb.easyschoolback.model.entities.Course;
 import br.edu.ifpb.easyschoolback.model.entities.Student;
 import br.edu.ifpb.easyschoolback.model.repository.CourseRepository;
 import br.edu.ifpb.easyschoolback.model.repository.StudentRepository;
-import br.edu.ifpb.easyschoolback.model.repository.exception.EntityAlreadyExistsException;
 import br.edu.ifpb.easyschoolback.model.repository.exception.EntityNotFoundException;
 import br.edu.ifpb.easyschoolback.presentation.dtos.course.CourseResponseDto;
 import br.edu.ifpb.easyschoolback.presentation.dtos.course.CreateCourseRequestDto;
 import br.edu.ifpb.easyschoolback.presentation.dtos.course.UpdateCourseRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,21 +24,16 @@ public class CourseService {
 
     private final CourseRepository courseRepository;
     private final StudentRepository studentRepository;
+    private final ModelMapper mapper;
 
     public CourseResponseDto create(final CreateCourseRequestDto courseRequest) {
         log.info("Creating course: {}", courseRequest);
 
-        Optional<Course> courseExists = findCourseEntityByName(courseRequest.name());
-
-        if (courseExists.isPresent()) {
-            throw new EntityAlreadyExistsException();
-        }
-
-        Course createdCourse = CourseRequestToCourseMapper.mapper(courseRequest);
+        Course createdCourse = mapper.map(courseRequest, Course.class);
         createdCourse = this.courseRepository.save(createdCourse);
 
         log.info("Course created: {}", createdCourse);
-        return CourseToCourseResponseMapper.mapper(createdCourse);
+        return mapper.map(createdCourse, CourseResponseDto.class);
     }
 
     public CourseResponseDto findById(final Long id) {
@@ -49,7 +42,7 @@ public class CourseService {
         Course course = findCourseEntityById(id);
 
         log.info("Course found: {}", course);
-        return CourseToCourseResponseMapper.mapper(course);
+        return mapper.map(course, CourseResponseDto.class);
     }
 
     public List<CourseResponseDto> findAll() {
@@ -59,7 +52,7 @@ public class CourseService {
 
         log.info("Courses found: {}", courses);
         return courses.stream()
-                .map(CourseToCourseResponseMapper::mapper)
+                .map(course -> mapper.map(course, CourseResponseDto.class))
                 .collect(Collectors.toList());
     }
 
@@ -68,15 +61,15 @@ public class CourseService {
 
         Course course = findCourseEntityById(id);
 
-        course.setMaxCapacity(updateRequest.maxCapacity());
-        course.setMinAge(updateRequest.minAge());
-        course.setMaxAge(updateRequest.maxAge());
-        course.setCourseDays(updateRequest.daysOfWeek());
+        course.setMaxCapacity(updateRequest.getMaxCapacity());
+        course.setMinAge(updateRequest.getMinAge());
+        course.setMaxAge(updateRequest.getMaxAge());
+        course.setCourseDays(updateRequest.getDaysOfWeek());
 
         course = courseRepository.save(course);
 
         log.info("Course updated: {}", course);
-        return CourseToCourseResponseMapper.mapper(course);
+        return mapper.map(course, CourseResponseDto.class);
     }
 
     public void delete(final Long id) {
