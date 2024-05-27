@@ -1,25 +1,32 @@
-services:
+version: '3.8'
 
+volumes:
+  prometheus_data:
+  grafana_data:
+
+services:
   easyschool-back:
     container_name: easyschool-back
-    image: easyschool-back
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/app
+      - ~/.gradle:/home/gradle/.gradle
     ports:
       - "8081:8081"
     networks:
       - easy-school-network
-    depends_on:
-      - easyschool-db
     environment:
+      SPRING_PROFILES_ACTIVE: dev
       URL: jdbc:postgresql://easyschool-db:5432/easy_school
       DB_USERNAME: db_owner
       DB_PASSWORD: easy1234
       DATABASE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
-      SPRING_JPA_HIBERNATE_DDL-AUTO: update
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SERVER_PORT: 8081
-
+    depends_on:
+      - easyschool-db
 
   easyschool-db:
     container_name: easyschool-db
@@ -31,6 +38,26 @@ services:
       POSTGRES_DB: easy_school
     ports:
       - "5432:5432"
+    networks:
+      - easy-school-network
+
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    networks:
+      - easy-school-network
+    ports:
+      - "9090:9090"
+
+  grafana:
+    container_name:
+      grafana
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
     networks:
       - easy-school-network
 

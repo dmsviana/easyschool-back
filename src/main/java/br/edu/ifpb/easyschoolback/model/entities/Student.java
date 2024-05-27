@@ -22,6 +22,8 @@ import java.util.Objects;
 @Entity
 public class Student extends User {
 
+    private static final String ROLE = "ROLE_STUDENT";
+
     @Column(name = "parent_name")
     private String parentName;
 
@@ -45,6 +47,11 @@ public class Student extends User {
     public Integer getAge() {
         return getDateOfBirth().until(LocalDate.now()).getYears();
     }
+
+    public String getRole() {
+        return ROLE;
+    }
+
 
     @Override
     public final boolean equals(Object o) {
@@ -71,4 +78,6 @@ public class Student extends User {
                 .getHibernateLazyInitializer()
                 .getPersistentClass().hashCode() : getClass().hashCode();
     }
+
+
 }

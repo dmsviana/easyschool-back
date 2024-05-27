@@ -1,6 +1,7 @@
 package br.edu.ifpb.easyschoolback.model.entities;
 
-import br.edu.ifpb.easyschoolback.model.repository.exception.MaximumCapacityReachedException;
+import br.edu.ifpb.easyschoolback.model.exception.MaximumCapacityReachedException;
+import br.edu.ifpb.easyschoolback.model.exception.StudentAgeOutOfRangeException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -48,9 +49,9 @@ public class Course {
     private Integer maxAge;
 
     @ElementCollection(targetClass = DayOfWeek.class)
-    @CollectionTable(name = "tb_course_days", joinColumns = @JoinColumn(name = "course_id"))
+    @CollectionTable(name = "tb_course_days_of_week", joinColumns = @JoinColumn(name = "course_id"))
     @Enumerated(EnumType.STRING)
-    private List<DayOfWeek> courseDays;
+    private List<DayOfWeek> daysOfWeek;
 
     @OneToMany(fetch = EAGER)
     @JsonIgnore
@@ -101,13 +102,13 @@ public class Course {
 
     private void checkCourseCapacity() {
         if (this.maxCapacity <= this.students.size()) {
-            throw new MaximumCapacityReachedException("A capacidade máxima do curso foi atingida.");
+            throw new MaximumCapacityReachedException();
         }
     }
 
     private void checkStudentAge(final Student student) {
         if (student.getAge() < this.minAge || student.getAge() > this.maxAge) {
-            throw new IllegalArgumentException("A idade do aluno não está dentro da faixa etária do curso.");
+            throw new StudentAgeOutOfRangeException(this.minAge, this.maxAge);
         }
     }
 }

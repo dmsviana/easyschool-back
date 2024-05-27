@@ -19,6 +19,8 @@ import java.util.List;
 @Entity
 public class Teacher extends User {
 
+    private static final String ROLE = "ROLE_TEACHER";
+
     @Column(name = "salary", nullable = false)
     private BigDecimal salary;
 
@@ -39,5 +41,10 @@ public class Teacher extends User {
     public void removeCourse(final Course course) {
         this.courses.remove(course);
         course.getTeachers().remove(this);
+    }
+
+
+    public String getRole() {
+        return ROLE;
     }
 }

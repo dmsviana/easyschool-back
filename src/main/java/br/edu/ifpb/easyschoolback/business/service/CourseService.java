@@ -64,7 +64,7 @@ public class CourseService {
         course.setMaxCapacity(updateRequest.getMaxCapacity());
         course.setMinAge(updateRequest.getMinAge());
         course.setMaxAge(updateRequest.getMaxAge());
-        course.setCourseDays(updateRequest.getDaysOfWeek());
+        course.setDaysOfWeek(updateRequest.getDaysOfWeek());
 
         course = courseRepository.save(course);
 

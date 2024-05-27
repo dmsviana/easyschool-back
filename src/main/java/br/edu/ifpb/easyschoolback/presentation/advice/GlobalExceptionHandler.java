@@ -1,7 +1,7 @@
 package br.edu.ifpb.easyschoolback.presentation.advice;
 
+import br.edu.ifpb.easyschoolback.model.exception.MaximumCapacityReachedException;
 import br.edu.ifpb.easyschoolback.model.exception.SchoolBusinessException;
-import br.edu.ifpb.easyschoolback.model.repository.exception.MaximumCapacityReachedException;
 import br.edu.ifpb.easyschoolback.presentation.dtos.error.ErrorResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

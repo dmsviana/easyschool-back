@@ -11,6 +11,7 @@ import br.edu.ifpb.easyschoolback.presentation.dtos.teacher.UpdateTeacherRequest
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class TeacherService {
         cpfValidationService.validateCpf(teacherRequest.getCpf());
 
         Teacher createdTeacher = mapper.map(teacherRequest, Teacher.class);
+        createdTeacher.setPassword(new BCryptPasswordEncoder().encode(createdTeacher.getPassword()));
         createdTeacher = this.teacherRepository.save(createdTeacher);
 
         log.info("Teacher created: {}", createdTeacher);
