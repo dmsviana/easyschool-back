@@ -84,6 +84,10 @@ public abstract class User {
         this.updatedAt = LocalDateTime.now();
     }
 
+    public boolean isActive() {
+        return this.active;
+    }
+
 
 }
 

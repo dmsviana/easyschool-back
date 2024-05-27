@@ -10,6 +10,7 @@ import br.edu.ifpb.easyschoolback.presentation.dtos.student.UpdateStudentRequest
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +35,7 @@ public class StudentService {
         cpfValidationService.validateCpf(studentRequest.getCpf());
 
         Student createdStudent = mapper.map(studentRequest, Student.class);
+        createdStudent.setPassword(new BCryptPasswordEncoder().encode(createdStudent.getPassword()));
         createdStudent = this.studentRepository.save(createdStudent);
 
         log.info("Student created: {}", createdStudent);
